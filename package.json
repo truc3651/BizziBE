@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node index.ts",
+    "dev": "nodemon --exec ts-node index.ts --ignore '*.test.ts'",
     "start": "ts-node index.ts",
     "test": "jest -c jest.config.js"
   },

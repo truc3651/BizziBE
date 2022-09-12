@@ -21,13 +21,8 @@ const server = new ApolloServer({
   ),
   csrfPrevention: true,
   plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+  introspection: true,
   context: (context: Context) => {
-    // context.loaders = {
-    //   newsLoaderByPublisher: new DataLoader(fetchNewsByPublisher),
-    //   newsLoaderByCategory: new DataLoader(fetchNewsByCategory),
-    //   publisherLoaderByNews: new DataLoader(fetchPublisherByNews),
-    //   categoryLoaderByNews: new DataLoader(fetchCategoryByNews),
-    // }
     Object.assign(context, {
       loaders: {
         newsLoaderByPublisher: new DataLoader(fetchNewsByPublisher),

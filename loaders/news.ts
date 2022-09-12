@@ -8,17 +8,15 @@ export const fetchNewsByPublisher = async (publisherIds: Types.ObjectId[]) => {
     condition: {
       publisherId: { $in: publisherIds },
     },
-    limit: 100,
   });
   return groupByProvidedKey(data.data, publisherIds, "publisherId");
 };
 
-export const fetchNewsByCategory = async (categoryIds) => {
+export const fetchNewsByCategory = async (categoryIds: Types.ObjectId[]) => {
   const data = await newsService.list({
     condition: {
       categoryId: { $in: categoryIds },
     },
-    limit: 100,
   });
   return groupByProvidedKey(data.data, categoryIds, "categoryId");
 };

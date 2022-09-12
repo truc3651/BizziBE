@@ -9,7 +9,6 @@ export default class CategoryService extends BaseService<CategoryDocument> {
   }
 
   public async listCategories(args: ListPayload) {
-    console.log('>>param', args)
     return this.list({
       select: "id name",
       ...args,

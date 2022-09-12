@@ -14,7 +14,6 @@ export default {
       _,
       { publisher, loaders: { publisherLoaderByNews } }
     ) => {
-      console.log(">>publisher", publisher);
       const publisherId = parent.publisherId || publisher._id;
       return publisherLoaderByNews.load(publisherId);
     },

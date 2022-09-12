@@ -7,7 +7,6 @@ export const fetchCategoryByNews = async (categoryIds) => {
     condition: {
       _id: { $in: categoryIds },
     },
-    limit: 100,
   });
   return groupBy(data.data, categoryIds);
 };

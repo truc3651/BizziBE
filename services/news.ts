@@ -4,35 +4,53 @@ import {
   UpdatePayload,
   ListNewsPayload,
   ListMyNewsPayload,
-} from "./news.types";
+} from "../interfaces/news.itf";
+import CategoryService from "./category";
+import PublisherService from "./publisher";
 import BaseService from "./BaseService";
 import NewsModel, { NewsDocument } from "../models/news";
 import { removeNilValue } from "../utils/common";
 
 export default class NewsService extends BaseService<NewsDocument> {
+  private categoryService: CategoryService;
+  private publisherService: PublisherService;
+
   constructor() {
     super(NewsModel);
+    this.categoryService = new CategoryService();
+    this.publisherService = new PublisherService();
   }
+  public async createNews(args: CreatePayload) {
+    const publisherId = new Types.ObjectId(args.publisherId);
+    const categoryId = new Types.ObjectId(args.categoryId);
+    await Promise.all([
+      this.categoryService.findOrFail({ _id: categoryId }),
+      this.publisherService.findOrFail({ _id: publisherId }),
+    ]);
 
-  public createNews(args: CreatePayload) {
     return this.create({
       ...args,
-      categoryId: new Types.ObjectId(args.categoryId),
-      publisherId: new Types.ObjectId(args.publisherId)
+      categoryId,
+      publisherId,
     });
   }
 
   public async updateNews(args: UpdatePayload) {
-    const { id, categoryId, publisherId, title, content } = args;
+    const { id, categoryId, title, content } = args;
     const objectId = new Types.ObjectId(id);
+    const publisherId = new Types.ObjectId(args.publisherId);
     const news = await this.find({
       _id: objectId,
-      publisherId: new Types.ObjectId(publisherId),
+      publisherId,
     });
 
     if (!news) throw Error("not found");
     if (!title && !content && !categoryId) {
       return news;
+    }
+    if (categoryId) {
+      const categoryId = new Types.ObjectId(args.categoryId);
+      await this.categoryService.findOrFail({ _id: categoryId });
     }
     return this.update(objectId, {
       ...removeNilValue(args),
@@ -100,7 +118,10 @@ export default class NewsService extends BaseService<NewsDocument> {
     });
   }
 
-  public listTwoNewsByCategory(categoryId: Types.ObjectId) {
+  public async listTwoNewsByCategory(categoryId: Types.ObjectId) {
+    const categoryObjectId = new Types.ObjectId(categoryId);
+    await this.categoryService.findOrFail({ _id: categoryObjectId });
+
     return this.list({
       condition: {
         categoryId,

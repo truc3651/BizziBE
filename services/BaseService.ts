@@ -16,9 +16,9 @@ export default class BaseService<T> {
     return result;
   }
 
-   async createMany(args: Array<Partial<T>>): Array<Promise<T>> {
-    const result = await this._model.insertMany(args)
-    return result
+  async createMany(args: Array<Partial<T>>): Array<Promise<T>> {
+    const result = await this._model.insertMany(args);
+    return result;
   }
 
   async update(
@@ -51,6 +51,14 @@ export default class BaseService<T> {
     return this._model.findOne(condition).select(selects).exec() as Promise<
       T | undefined
     >;
+  }
+
+  async findOrFail(
+    condition: Record<string, any>,
+    select?: string
+  ): Promise<T | undefined> {
+    const result = await this.find(condition, select);
+    if (!result) throw new Error("object not found");
   }
 
   async list({
