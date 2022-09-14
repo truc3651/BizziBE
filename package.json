@@ -12,7 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/truc3651/BizziBE.git"
   },
-  "keywords": [],
+  "keywords": [
+    "graphql",
+    "mongodb",
+    "nodejs",
+    "apollo"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
